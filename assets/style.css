@@ -1,0 +1,60 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", sans-serif;
+}
+
+body {
+    display: flex;
+    height: 100vh;
+    font-size: 14px;
+}
+
+section {
+    flex: 1;
+}
+
+section,
+aside {
+    height: 100%;
+}
+
+aside {
+    padding: 16px;
+    padding-top: 0;
+    height: 100%;
+    width: 300px;
+    border-right: 1px solid #DDD;
+    gap: 24px;
+    overflow: auto;
+}
+
+aside>h1 {
+    margin-top: 16px;
+}
+
+aside,
+.module,
+.module>ul {
+    display: flex;
+    flex-direction: column;
+}
+
+.module>h2 {
+    position: sticky;
+    font-size: 18px;
+    top: 0px;
+    background-color: white;
+    padding: 6px 0;
+}
+
+.module>ul {
+    list-style: none;
+    gap: 4px;
+}
+
+.module>ul>li {
+    cursor: pointer;
+    font-size: 16px;
+}
