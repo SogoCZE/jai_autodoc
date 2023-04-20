@@ -13,6 +13,20 @@ body {
 
 section {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    margin-left: 300px;
+    gap: 16px;
+}
+
+section a {
+    color: black;
+    text-decoration: none;
+}
+
+section a:hover {
+    text-decoration: underline;
 }
 
 section,
@@ -21,40 +35,41 @@ aside {
 }
 
 aside {
+    position: fixed;
     padding: 16px;
     padding-top: 0;
     height: 100%;
     width: 300px;
-    border-right: 1px solid #DDD;
-    gap: 24px;
     overflow: auto;
 }
 
-aside>h1 {
+aside.modules {
+    border-right: 1px solid #DDD;
+    gap: 24px;
+}
+
+aside.modules>h1 {
     margin-top: 16px;
 }
 
-aside,
-.module,
-.module>ul {
+aside.modules>h1>a {
+    color: black;
+    text-decoration: none;
+}
+
+aside.modules>ul {
+    list-style: none;
+    margin-top: 16px;
     display: flex;
     flex-direction: column;
-}
-
-.module>h2 {
-    position: sticky;
-    font-size: 18px;
-    top: 0px;
-    background-color: white;
-    padding: 6px 0;
-}
-
-.module>ul {
-    list-style: none;
     gap: 4px;
 }
 
-.module>ul>li {
-    cursor: pointer;
-    font-size: 16px;
+aside.modules>ul>li>a {
+    color: black;
+    text-decoration: none;
+}
+
+aside.modules>ul>li.active {
+    font-weight: bold;
 }

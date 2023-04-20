@@ -1,3 +1,4 @@
+// @SPEED: @TODO: Put all this code into dynamic lib (like in Jails)
 
 TITLE :: "Jai Autodoc";
 
@@ -22,18 +23,23 @@ generate :: (modules: Modules) {
 
     head(*builder, TITLE);
 
-    sidebar(*builder, TITLE, modules);
+    sidebar(*builder, modules);
 
     append(*builder, "<section>Content</section>");
 
     append(*builder, "</html>");
 
-    make_directory_if_it_does_not_exist("../output");
+    make_directory_if_it_does_not_exist("../output/modules", recursive=true);
 
     copy_file("../assets/script.js", "../output/script.js");
     copy_file("../assets/style.css", "../output/style.css");
 
     write_entire_file("../output/index.html", *builder);
+
+    for decls, module: modules {
+        if module.count == 0 continue;
+        generate_module_file(module, decls, modules);
+    }
 }
 
 head :: (builder: *String_Builder, title: string) {
@@ -52,31 +58,50 @@ head :: (builder: *String_Builder, title: string) {
     HTML, title);
 }
 
-sidebar :: (builder: *String_Builder, title: string, modules: Modules) {
+sidebar :: (builder: *String_Builder, modules: Modules, active := "") {
     append_html(builder, #string HTML
-        <aside>
-            <h1>%</h1>
-    HTML, title);
+        <aside class="modules">
+            <h1><a href="/">%</a></h1>
+            <ul>
+    HTML, TITLE);
 
     for decls, module: modules {
-        module_menu(builder, module, decls);
+        if module.count == 0 continue;
+        append_html(builder, #string HTML
+            <li class="%""><a href="%.html">%</a></li>
+        HTML, ifx module == active "active" else "", module, module);
     }
 
-    append_html(builder, "</aside>");
+    append_html(builder, "</ul></aside>");
 }
 
-module_menu :: (builder: *String_Builder, module: string, decls: []*Code_Declaration) {
+generate_module_file :: (module: string, decls: []*Code_Declaration, modules: Modules) {
+    builder: String_Builder;
+    init_string_builder(*builder);
+    defer reset(*builder);
+
+    head(*builder, module);
+    sidebar(*builder, modules, module);
+
+    generate_module_content(*builder, module, decls);
+
+    append(*builder, "</html>");
+
+
+    write_entire_file(tprint("../output/%.html", module), *builder);
+}
+
+generate_module_content :: (builder: *String_Builder, module: string, decls: []*Code_Declaration) {
     append_html(builder, #string HTML
-        <article class="module">
-            <h2>%</h2>
-            <ul>
+        <section>
+            <h2>Module %</h2>
     HTML, module);
 
     for decl: decls {
         append_html(builder, #string HTML
-            <li>%</li>
-        HTML, decl.name);
+            <h3 id="%1"><a href="#%1">%1</a></h3>
+        HTML, decl.name, decl.expression.kind);
     }
 
-    append(builder, "</ul></article>");
+    append_html(builder, "</section>");
 }
